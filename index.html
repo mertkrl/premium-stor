@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ana Sayfa | Premium Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0071e3;
+            --bg: #f5f5f7;
+            --text-main: #1d1d1f;
+            --text-sec: #86868b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg); color: var(--text-main); overflow-x: hidden; }
+
+        /* KAYDIRMA ANİMASYONLARI (Scroll Reveal) */
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* HEADER */
+        header { position: fixed; top: 0; width: 100%; height: 60px; background: rgba(255, 255, 255, 0.8); backdrop-filter: saturate(180%) blur(20px); display: flex; justify-content: space-between; align-items: center; padding: 0 40px; z-index: 100; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .logo { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
+        .cart-icon-wrapper { position: relative; cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: 500;}
+        .cart-badge { background: var(--primary); color: white; font-size: 11px; font-weight: 700; padding: 2px 6px; border-radius: 10px; position: absolute; top: -8px; right: -12px; }
+
+        /* HERO SECTION */
+        .hero { margin-top: 60px; height: 75vh; background: linear-gradient(to bottom, #000, #1c1c1e); color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; position: relative; overflow: hidden;}
+        .hero h1 { font-size: 4rem; font-weight: 800; letter-spacing: -2px; margin-bottom: 15px; background: linear-gradient(90deg, #fff, #a1a1a6); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
+        .hero p { font-size: 1.5rem; color: #a1a1a6; margin-bottom: 40px; max-width: 600px; }
+        .hero .btn { background: white; color: black; padding: 18px 40px; border-radius: 30px; text-decoration: none; font-weight: 600; font-size: 1.1rem; transition: 0.3s; }
+        .hero .btn:hover { transform: scale(1.05); box-shadow: 0 10px 20px rgba(255,255,255,0.2); }
+
+        /* KAYAN YAZI (MARQUEE) */
+        .marquee-wrapper { background: var(--primary); color: white; padding: 12px 0; overflow: hidden; display: flex; white-space: nowrap; font-weight: 600; font-size: 14px; letter-spacing: 1px; }
+        .marquee-content { display: flex; animation: scroll-marquee 20s linear infinite; }
+        .marquee-content span { margin: 0 40px; }
+        @keyframes scroll-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        /* BENTO GRID (EKO-SİSTEM) */
+        .bento-section { max-width: 1200px; margin: 80px auto; padding: 0 20px; }
+        .bento-grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: 250px 250px; gap: 20px; }
+        .bento-box { background: white; border-radius: 28px; padding: 30px; display: flex; flex-direction: column; justify-content: center; transition: 0.3s; cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.03); overflow: hidden; position: relative;}
+        .bento-box:hover { transform: translateY(-5px) scale(1.01); }
+        .bento-large { grid-column: span 2; grid-row: span 2; background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%); align-items: center; text-align: center;}
+        .bento-box h3 { font-size: 24px; font-weight: 700; margin-bottom: 10px; z-index: 2;}
+        .bento-box p { color: var(--text-sec); z-index: 2;}
+        .bento-icon { font-size: 80px; margin-bottom: 20px; opacity: 0.9; }
+
+        /* ÜRÜN VİTRİNİ */
+        .products-section { max-width: 1200px; margin: 100px auto; padding: 0 20px; }
+        .section-title { font-size: 2.5rem; font-weight: 800; margin-bottom: 50px; text-align: center; letter-spacing: -1px; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .product-card { background: white; border-radius: 28px; padding: 30px; display: flex; flex-direction: column; align-items: center; text-align: center; transition: all 0.4s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
+        .product-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
+        .product-img { width: 100%; height: 220px; background: #f5f5f7; border-radius: 20px; margin-bottom: 25px; display: flex; align-items: center; justify-content: center; font-size: 70px; transition: 0.4s;}
+        .product-card:hover .product-img { transform: scale(1.05); }
+        .product-title { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+        .product-price { font-size: 18px; font-weight: 600; margin: 15px 0 25px 0; }
+        .add-btn { background: var(--text-main); color: white; border: none; padding: 15px 30px; border-radius: 25px; font-weight: 600; cursor: pointer; transition: 0.2s; width: 100%; }
+        .add-btn:hover { background: var(--primary); transform: scale(0.98); }
+
+        /* SIKÇA SORULAN SORULAR (FAQ) */
+        .faq-section { max-width: 800px; margin: 100px auto; padding: 0 20px; }
+        .faq-item { background: white; border-radius: 16px; margin-bottom: 15px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.02);}
+        .faq-question { padding: 20px 25px; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .faq-answer { padding: 0 25px; max-height: 0; overflow: hidden; transition: max-height 0.3s ease; color: var(--text-sec); line-height: 1.6; }
+        .faq-item.active .faq-answer { padding: 0 25px 20px 25px; max-height: 200px; }
+        .faq-item.active .faq-icon { transform: rotate(45deg); }
+        .faq-icon { transition: transform 0.3s; font-size: 20px;}
+
+        /* FOOTER */
+        footer { background: white; padding: 60px 40px 30px 40px; margin-top: 100px; border-top: 1px solid #e2e2e7; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; max-width: 1200px; margin: 0 auto; }
+        .footer-col h4 { font-weight: 700; margin-bottom: 20px; color: var(--text-main); }
+        .footer-col ul { list-style: none; }
+        .footer-col ul li { margin-bottom: 12px; color: var(--text-sec); cursor: pointer; transition: 0.2s; }
+        .footer-col ul li:hover { color: var(--primary); }
+        .footer-bottom { text-align: center; margin-top: 60px; padding-top: 20px; border-top: 1px solid #eee; color: #a1a1a6; font-size: 13px; }
+
+        /* SEPET VE TOAST (Önceki kodlar aynı) */
+        .cart-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(5px); z-index: 998; }
+        .cart-drawer { position: fixed; top: 0; right: -450px; width: 100%; max-width: 400px; height: 100%; background: white; z-index: 999; box-shadow: -10px 0 40px rgba(0,0,0,0.15); transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; padding: 30px; }
+        .cart-drawer.open { right: 0; }
+        .drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #e2e2e7; }
+        .close-btn { border: none; background: #f5f5f7; width: 35px; height: 35px; border-radius: 50%; font-size: 20px; cursor: pointer; transition: 0.2s;}
+        .drawer-items { flex: 1; overflow-y: auto; }
+        .cart-drawer-item { display: flex; align-items: center; margin-bottom: 20px; }
+        .drawer-item-thumb { width: 60px; height: 60px; background: #f5f5f7; border-radius: 12px; margin-right: 15px; display:flex; align-items:center; justify-content:center; font-size: 24px;}
+        .drawer-item-info { flex: 1; }
+        .drawer-footer { border-top: 2px solid #f5f5f7; padding-top: 20px; margin-top: 10px; }
+        .checkout-btn { display: block; width: 100%; padding: 18px; background: var(--text-main); color: white; text-align: center; border-radius: 16px; text-decoration: none; font-weight: 600; margin-top: 15px;}
+        .toast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 15px 30px; border-radius: 30px; font-weight: 500; font-size: 14px; backdrop-filter: blur(10px); z-index: 1000; transition: bottom 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .toast.show { bottom: 40px; }
+
+        @media (max-width: 768px) {
+            .bento-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
+            .bento-large { grid-column: span 1; grid-row: span 1; }
+            .hero h1 { font-size: 2.5rem; }
+        }
+
+        .chat-bubble { position: fixed; bottom: 30px; right: 30px; background: var(--primary); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; box-shadow: 0 10px 20px rgba(0,113,227,0.3); z-index: 999; }
+.chat-window { position: fixed; bottom: 100px; right: 30px; width: 300px; height: 400px; background: white; border-radius: 20px; display: none; flex-direction: column; box-shadow: 0 10px 40px rgba(0,0,0,0.1); z-index: 999; overflow: hidden; }
+.chat-header { background: var(--primary); color: white; padding: 15px; font-weight: 600; }
+.chat-body { flex: 1; padding: 20px; font-size: 14px; }
+.chat-window input { border: none; border-top: 1px solid #eee; padding: 15px; width: 100%; outline: none; }
+
+
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">Premium Store</div>
+    <div class="cart-icon-wrapper" onclick="toggleCart()">
+        🛍️ Sepetim <span class="cart-badge" id="cart-badge">0</span>
+    </div>
+</header>
+
+<section class="hero reveal">
+    <h1>Gelecek Şimdi Başlıyor.</h1>
+    <p>En yeni teknolojileri, en saf haliyle deneyimleyin. Tasarımın ve gücün mükemmel uyumu.</p>
+    <a href="#products" class="btn">Koleksiyonu Keşfet</a>
+</section>
+
+<div class="marquee-wrapper">
+    <div class="marquee-content">
+        <span>🚀 TÜM SİPARİŞLERDE ÜCRETSİZ KARGO</span>
+        <span>🛡️ 2 YIL RESMİ GARANTİ</span>
+        <span>💳 VADE FARKSIZ 3 TAKSİT İMKANI</span>
+        <span>🔄 14 GÜN İÇİNDE KOŞULSUZ İADE</span>
+        <span>🚀 TÜM SİPARİŞLERDE ÜCRETSİZ KARGO</span>
+        <span>🛡️ 2 YIL RESMİ GARANTİ</span>
+        <span>💳 VADE FARKSIZ 3 TAKSİT İMKANI</span>
+        <span>🔄 14 GÜN İÇİNDE KOŞULSUZ İADE</span>
+    </div>
+</div>
+
+<section class="bento-section reveal">
+    <h2 class="section-title">Neden Biz?</h2>
+    <div class="bento-grid">
+        <div class="bento-box bento-large">
+            <div class="bento-icon">🌟</div>
+            <h3>Kusursuz Ekosistem</h3>
+            <p>Cihazlarınız birbiriyle sihir gibi konuşur. Dosyalarınızı anında aktarın, kesintisiz çalışın.</p>
+        </div>
+        <div class="bento-box" style="background: #e8f5e9;">
+            <div class="bento-icon">🔋</div>
+            <h3>Tüm Gün Pil Ömrü</h3>
+            <p>Şarj aletini evde unutma özgürlüğü.</p>
+        </div>
+        <div class="bento-box" style="background: #e3f2fd;">
+            <div class="bento-icon">🔒</div>
+            <h3>Gizlilik Odaklı</h3>
+            <p>Verileriniz cihazınızda kalır, güvendedir.</p>
+        </div>
+    </div>
+</section>
+
+<section id="products" class="products-section reveal">
+    <h2 class="section-title">En Yeniler</h2>
+    <div class="product-grid">
+        <div class="product-card">
+            <div class="product-img">📱</div>
+            <h3 class="product-title">Phone 15 Pro</h3>
+            <p class="product-desc" style="color:var(--text-sec); font-size:14px;">Titanyum gövde. A17 Pro çip.</p>
+            <div class="product-price">64.999 TL</div>
+            <button class="add-btn" onclick="addToCart('Phone 15 Pro', 64999)">Sepete Ekle</button>
+        </div>
+        <div class="product-card">
+            <div class="product-img">💻</div>
+            <h3 class="product-title">MacBook Air M3</h3>
+            <p class="product-desc" style="color:var(--text-sec); font-size:14px;">İnanılmaz ince, şaşırtıcı hızlı.</p>
+            <div class="product-price">42.499 TL</div>
+            <button class="add-btn" onclick="addToCart('MacBook Air M3', 42499)">Sepete Ekle</button>
+        </div>
+        <div class="product-card">
+            <div class="product-img">⌚</div>
+            <h3 class="product-title">Watch Series 9</h3>
+            <p class="product-desc" style="color:var(--text-sec); font-size:14px;">Sağlığınız bileğinizde.</p>
+            <div class="product-price">16.499 TL</div>
+            <button class="add-btn" onclick="addToCart('Watch Series 9', 16499)">Sepete Ekle</button>
+        </div>
+    </div>
+</section>
+
+<section class="faq-section reveal">
+    <h2 class="section-title">Sıkça Sorulan Sorular</h2>
+    <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-question">Kargo ücreti ne kadar? <span class="faq-icon">+</span></div>
+        <div class="faq-answer">Tüm alışverişlerinizde kargo tamamen ücretsizdir. Siparişleriniz aynı gün kargoya teslim edilir.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-question">Ürünler orijinal mi ve garantisi var mı? <span class="faq-icon">+</span></div>
+        <div class="faq-answer">Evet, mağazamızdaki tüm ürünler %100 orijinal olup, distribütör tarafından 2 yıl resmi garanti altındadır.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-question">İade koşullarınız nelerdir? <span class="faq-icon">+</span></div>
+        <div class="faq-answer">Ürünü teslim aldıktan sonraki 14 gün içerisinde kutusu açılmamış ve hasar görmemiş ürünleri koşulsuz şartsız iade edebilirsiniz.</div>
+    </div>
+</section>
+
+<footer class="reveal">
+    <div class="footer-grid">
+        <div class="footer-col">
+            <h4>Kategoriler</h4>
+            <ul><li>Telefonlar</li><li>Mac & PC</li><li>Tabletler</li><li>Aksesuarlar</li></ul>
+        </div>
+        <div class="footer-col">
+            <h4>Hesabım</h4>
+            <ul><li>Sipariş Takibi</li><li>Favorilerim</li><li>Adreslerim</li></ul>
+        </div>
+        <div class="footer-col">
+            <h4>Kurumsal</h4>
+            <ul><li>Hakkımızda</li><li>İletişim</li><li>Kariyer</li><li>Mağazalarımız</li></ul>
+        </div>
+        <div class="footer-col">
+            <h4>Bizi Takip Edin</h4>
+            <ul><li>Instagram</li><li>Twitter (X)</li><li>YouTube</li></ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        &copy; 2026 Premium Store. Tüm hakları saklıdır. | Güvenli Alışveriş
+    </div>
+</footer>
+
+<div id="cart-overlay" class="cart-overlay" onclick="closeCart()"></div>
+<div id="cart-drawer" class="cart-drawer">
+    <div class="drawer-header"><h3>Çantam</h3><button onclick="closeCart()" class="close-btn">✕</button></div>
+    <div id="drawer-items" class="drawer-items"></div>
+    <div class="drawer-footer">
+        <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 20px;"><span>Toplam</span><span id="drawer-total-price">0 TL</span></div>
+        <a href="odeme.html" class="checkout-btn">Güvenli Ödemeye Geç</a>
+    </div>
+</div>
+<div id="toast" class="toast">Ürün eklendi!</div>
+
+<script>
+    // --- 1. KAYDIRMA ANİMASYONU (SCROLL REVEAL) ---
+    function revealOnScroll() {
+        var reveals = document.querySelectorAll('.reveal');
+        for (var i = 0; i < reveals.length; i++) {
+            var windowHeight = window.innerHeight;
+            var elementTop = reveals[i].getBoundingClientRect().top;
+            var elementVisible = 100;
+            if (elementTop < windowHeight - elementVisible) {
+                reveals[i].classList.add('active');
+            }
+        }
+    }
+    window.addEventListener('scroll', revealOnScroll);
+    revealOnScroll(); // Sayfa yüklendiğinde ilk elementleri göster
+
+    // --- 2. FAQ (ACCORDION) ETKİLEŞİMİ ---
+    function toggleFaq(element) {
+        element.classList.toggle("active");
+    }
+
+    // --- 3. SEPET İŞLEMLERİ ---
+    updateCartCount();
+
+    function addToCart(name, price) {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        cart.push({ name, price });
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartCount();
+        renderDrawer();
+        showToast(`${name} çantanıza eklendi.`);
+    }
+
+    function updateCartCount() {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        document.getElementById('cart-badge').innerText = cart.length;
+    }
+
+    function showToast(message) {
+        const toast = document.getElementById('toast');
+        toast.innerText = message;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    function toggleCart() {
+        renderDrawer();
+        document.getElementById('cart-drawer').classList.add('open');
+        document.getElementById('cart-overlay').style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeCart() {
+        document.getElementById('cart-drawer').classList.remove('open');
+        setTimeout(() => document.getElementById('cart-overlay').style.display = 'none', 300);
+        document.body.style.overflow = 'auto';
+    }
+
+    function renderDrawer() {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const container = document.getElementById('drawer-items');
+        const totalEl = document.getElementById('drawer-total-price');
+        
+        if (cart.length === 0) {
+            container.innerHTML = `<div style="text-align:center; padding-top:40px; color:#86868b;">Çantanız boş.</div>`;
+            totalEl.innerText = "0 TL";
+            return;
+        }
+
+        let total = 0;
+        container.innerHTML = cart.map((item, index) => {
+            total += item.price;
+            return `<div class="cart-drawer-item"><div class="drawer-item-thumb">📦</div><div class="drawer-item-info"><div style="font-weight:600;">${item.name}</div><div style="font-size:14px; color:#515154;">${item.price.toLocaleString('tr-TR')} TL</div></div><button onclick="removeFromDrawer(${index})" style="border:none; background:none; color:#ff3b30; cursor:pointer; font-weight:500;">Sil</button></div>`;
+        }).join('');
+        totalEl.innerText = `${total.toLocaleString('tr-TR')} TL`;
+    }
+
+    function removeFromDrawer(index) {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        cart.splice(index, 1);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartCount();
+        renderDrawer();
+    }
+</script>
+<div class="chat-bubble" onclick="toggleChat()">💬</div>
+<div id="chat-window" class="chat-window">
+    <div class="chat-header">Destek Ekibi <span>●</span></div>
+    <div class="chat-body">
+        <p>Merhaba! Size nasıl yardımcı olabilirim?</p>
+    </div>
+    <input type="text" placeholder="Mesajınızı yazın...">
+</div>
+
+</body>
+</html>
